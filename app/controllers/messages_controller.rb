@@ -1,10 +1,11 @@
 class MessagesController < ApplicationController
+  before_action :set_message, only: [:show, :edit, :update, :destroy]
+
   def index
     @messages = Message.all
   end
 
   def show
-    @message = Message.find(params[:id])
   end
 
   def new
@@ -24,13 +25,10 @@ class MessagesController < ApplicationController
   end
 
   def edit
-    @message = Message.find(params[:id])
   end
 
   def update
-    @message = Message.find(params[:id])
-
-    if @message.save
+    if @message.update(message_params)
       flash[:success] = "Messageが正常に投稿されました"
       redirect_to @message
     else
@@ -40,7 +38,6 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    @message = Message.find(params[:id])
     @message.destroy
 
     flash[:success] = "Messageが正常に削除されました"
@@ -51,6 +48,10 @@ class MessagesController < ApplicationController
   private
   def message_params
     params.require(:message).permit(:content)
+  end
+
+  def set_message
+    @message = Message.find(params[:id])
   end
 
 end
